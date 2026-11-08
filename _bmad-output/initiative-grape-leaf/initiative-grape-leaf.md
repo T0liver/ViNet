@@ -94,3 +94,7 @@ Tracer path: on a debug build, with the bundled stand-in, run one replay through
 - Decision: 2026-11-08 The post-spike benchmark chooses the default runtime. The spike starts on LiteRT. That start is not the field default.
 - Decision: 2026-11-08 A fix outside `maxAccuracyM` leaves the event with no canopy point, and the screen says "location is missing". A fix inside the cap that is worse than `weakAccuracyM` (seeded at 5 m) is labeled "Weak GPS". The event is never discarded for GPS.
 - Decision: 2026-11-08 Real model swap stays last and unstarted. Epics 1 through 7 are accepted on a stand-in pack.
+- Decision: 2026-11-08 The approved split is one outcome per epic, not one Gradle module. Tracking, location, and storage are Events and place. Review and export are one epic. Disease pressure stays separate and does not edit the review map.
+- Decision: 2026-11-08 Live scan and Events and place stay whole until their stories are planned. A separate devtools epic was declined. Replay and the parity harness belong to Live scan, on the debug build.
+- Decision: 2026-11-08 The first demo is Live scan. Events and place is next, because a geolocated deduplicated sighting is the least certain part.
+- Decision: 2026-11-08 Shared design stays in the architecture spine. Phone proof is its own epic. Real model swap is a whole-epic gate on that proof.
