@@ -1,0 +1,64 @@
+# Draft epic split for Grape leaf disease detection. Build order is table order.
+
+[[epic]]
+id = 1
+slug = "epic-foundations"
+title = "Foundations"
+description = "The modules, shared contracts, manifest parser, Room schema, and CI are in place, and a JVM test run passes. The app id is hu.toliver.vinet, and the launcher shows the grape-leaf mark and the ViNet wordmark. For R2 and R5 this is the schema only, including the segment table. For R7 this is the JVM test run only."
+covers = ["R2", "R5", "R7"]
+
+[[epic]]
+id = 2
+slug = "epic-live-scan"
+title = "Live scan"
+description = "The foreground service is the only capture pipeline. It publishes upright frames and encodes the full frame and thumbnail before the camera buffer is released. A debug build includes a stand-in pack and may include a video for the first test. A release build includes no model file. A session shows boxes labeled with the pack class and score, from the camera or from video replay, and keeps running with the preview hidden or the screen off. The navigation shell starts here, with Scan as its first destination. The spike starts on LiteRT. For R7, video replay, GPX replay, the scripted detector, the debug readings, and the stand-in parity check run on that same pipeline."
+covers = ["R1", "R7"]
+after = [{ epic = 1, needs = "the modules, ports, and CI" }]
+
+[[epic]]
+id = 3
+slug = "epic-events"
+title = "Events and place"
+description = "A sighting becomes one stored event with one full-frame photo and one thumbnail. A fix inside the accuracy cap is stored as the canopy point. A fix outside it leaves the event with no canopy point and the words location is missing. A stored fix worse than 5 m is labeled Weak GPS. A nearby repeat of the same class does not create another event and keeps the existing photo. The image store enforces the session and global caps, can skip the files below the confidence setting, and can delete old files while keeping the rows. Session status shows the storage meter when a cap is nearly full. Plot polygons already on the device set event.plotName. The session plot label is not copied onto events."
+covers = ["R2"]
+after = [{ epic = 2, needs = "the one capture pipeline and upright frames" }]
+
+[[epic]]
+id = 4
+slug = "epic-review"
+title = "Review and export"
+description = "A finished session can be filtered by class, plot, and feedback on an offline map and a list, an event can be marked and opened in another maps app, and the session can be shared as GeoJSON, CSV, KML/GPX, and a zip. For R5 the map draws flagged segments from stored rows and does not compute them. A retraining export is included only while that assumption stands."
+covers = ["R3", "R4", "R5"]
+after = [{ epic = 3, needs = "stored events with one image each, and a canopy point when a fix was inside the cap" }]
+
+[[epic]]
+id = 5
+slug = "epic-density"
+title = "Disease pressure"
+description = "A moving scan writes flagged segment rows and shows the sentence high disease pressure here on the scan and on the service notification when the screen is off. A stationary scan does not. This epic does not edit the review map."
+covers = ["R5"]
+after = [{ epic = 4, needs = "the review map drawing stored segment rows, so this epic only writes them and adds the scan alert" }]
+
+[[epic]]
+id = 6
+slug = "epic-packs"
+title = "Packs, tiers, and heat"
+description = "The release APK contains no model. A local import or a checksummed Wi-Fi download from a configured index supplies a pack, and neither adds a Play services dependency. The benchmark loops still images that ship on the device and selects the largest tier that holds the frame rate. The farmer can override that tier for the next session. If the smallest tier cannot hold the rate, the app says so and still opens a scan. On API 29 and above, heat can slow inference. For R2, Settings imports plot polygons once for later sessions. Settings also holds the storage meter, image cleanup, and the tile-import row."
+covers = ["R2", "R6"]
+after = [{ epic = 2, needs = "the navigation shell, the Scan destination, and a detector that can run a pack" }, { epic = 3, needs = "event tagging from plot polygons already stored on the device" }, { epic = 5, needs = "the scan alert already on the session screen, so Settings is added without editing that notice" }]
+
+[[epic]]
+id = 7
+slug = "epic-phone-proof"
+title = "Phone proof"
+description = "The release build, which contains no model file, demonstrates R1, R2, R3, R4, R5, and R6 on a high-end phone, an S10 with no Play services, and a low-end phone, handheld and mounted, after a pack is imported or downloaded. Config numbers may change. Behavior does not."
+covers = ["R1", "R2", "R3", "R4", "R5", "R6"]
+after = [{ epic = 6, needs = "the field behaviors and a pack path that does not require Play services" }]
+
+[[epic]]
+id = 8
+slug = "epic-model-swap"
+title = "Real model swap"
+description = "A trained grape-leaf pack replaces the stand-in, passes the parity harness the live-scan epic built, and passes a field comparison against ground truth. It cannot start until the trainer project hands over a pack."
+covers = ["R8"]
+after = [{ epic = 2, needs = "the stand-in parity harness" }, { epic = 7, needs = "the proved field build" }]
