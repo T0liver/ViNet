@@ -11,7 +11,7 @@ covers = ["R2", "R5", "R7"]
 id = 2
 slug = "epic-live-scan"
 title = "Live scan"
-description = "The foreground service is the only capture pipeline. It publishes upright frames and encodes the full frame and thumbnail before the camera buffer is released. A debug build includes a stand-in pack and may include a video for the first test. A release build includes no model file. A session shows boxes labeled with the pack class and score, from the camera or from video replay, and keeps running with the preview hidden or the screen off. The navigation shell starts here, with Scan as its first destination. The spike starts on LiteRT. For R7, video replay, GPX replay, the scripted detector, the debug readings, and the stand-in parity check run on that same pipeline."
+description = "The foreground service is the only capture pipeline. It publishes upright frames and encodes the full frame and thumbnail before the camera buffer is released. A debug build includes a stand-in pack and may include a video for the first test. A release build includes no model file. A session shows boxes labeled with the pack class and score, from the camera or from video replay, and keeps running with the preview hidden or the screen off. The navigation shell starts here, with Scan as its first destination. Sessions and Settings are added by later epics. The spike starts on LiteRT. For R7, video replay, GPX replay, the scripted detector, the debug HUD, and the stand-in parity check run on the debug build only."
 covers = ["R1", "R7"]
 after = [{ epic = 1, needs = "the modules, ports, and CI" }]
 
@@ -27,7 +27,7 @@ after = [{ epic = 2, needs = "the one capture pipeline and upright frames" }]
 id = 4
 slug = "epic-review"
 title = "Review and export"
-description = "A finished session can be filtered by class, plot, and feedback on an offline map and a list, an event can be marked and opened in another maps app, and the session can be shared as GeoJSON, CSV, KML/GPX, and a zip. For R5 the map draws flagged segments from stored rows and does not compute them. A retraining export is included only while that assumption stands."
+description = "A finished session can be filtered by class, plot, and feedback on an offline map and a list, an event can be marked and opened in another maps app, and the session can be shared as GeoJSON, CSV, KML/GPX, a zip, and a retraining file of events marked wrong or unsure plus events under the configured confidence. In landscape the map and the list sit side by side. For R5 the map draws flagged segments from stored rows and does not compute them. This epic adds the Sessions destination."
 covers = ["R3", "R4", "R5"]
 after = [{ epic = 3, needs = "stored events with one image each, and a canopy point when a fix was inside the cap" }]
 
@@ -35,7 +35,7 @@ after = [{ epic = 3, needs = "stored events with one image each, and a canopy po
 id = 5
 slug = "epic-density"
 title = "Disease pressure"
-description = "A moving scan writes flagged segment rows and shows the sentence high disease pressure here on the scan and on the service notification when the screen is off. A stationary scan does not. This epic does not edit the review map."
+description = "A moving scan writes flagged segment rows and shows the sentence high disease pressure here on the scan and on the service notification when the screen is off. That notification vibrates once. A stationary scan does not. This epic does not edit the review map."
 covers = ["R5"]
 after = [{ epic = 4, needs = "the review map drawing stored segment rows, so this epic only writes them and adds the scan alert" }]
 
@@ -43,7 +43,7 @@ after = [{ epic = 4, needs = "the review map drawing stored segment rows, so thi
 id = 6
 slug = "epic-packs"
 title = "Packs, tiers, and heat"
-description = "The release APK contains no model. A local import or a checksummed Wi-Fi download from a configured index supplies a pack, and neither adds a Play services dependency. The benchmark loops still images that ship on the device and selects the largest tier that holds the frame rate. The farmer can override that tier for the next session. If the smallest tier cannot hold the rate, the app says so and still opens a scan. On API 29 and above, heat can slow inference. For R2, Settings imports plot polygons once for later sessions. Settings also holds the storage meter, image cleanup, and the tile-import row."
+description = "The release APK contains no model. A local import or a checksummed Wi-Fi download from a configured index supplies a pack, and neither adds a Play services dependency. The benchmark loops still images that ship on the device and selects the largest tier that holds the frame rate. The farmer can override that tier for the next session. If the smallest tier cannot hold the rate, the app says so and still opens a scan. On API 29 and above, heat can slow inference. This epic adds the Settings destination. For R2, Settings imports plot polygons once for later sessions. Settings also holds the storage meter, image cleanup, and the tile-import row."
 covers = ["R2", "R6"]
 after = [{ epic = 2, needs = "the navigation shell, the Scan destination, and a detector that can run a pack" }, { epic = 3, needs = "event tagging from plot polygons already stored on the device" }, { epic = 5, needs = "the scan alert already on the session screen, so Settings is added without editing that notice" }]
 
