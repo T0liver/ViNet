@@ -1,0 +1,100 @@
+# Live scan stories, in build order.
+
+[[entry]]
+id = 1
+type = "story"
+title = "See one scripted box"
+description = "Adds the Scan destination with Navigation Compose and a foreground service that is the only pipeline. Start runs the service. Stop ends it. Status shows running. A scripted detector implements the Detector port and returns one box. The overlay draws it in the manifest class color, which is not a theme token, and hides it below the manifest score threshold. The label is the manifest class name and score. The UI does not run the detector. For R1 this is the labeled overlay and start, stop, and status. For R2 this is the scripted detector. It needs the shared ports from Foundations."
+verify = "Install the debug APK, start Scan, and see one box in the manifest color, labeled with that class and score. A detection under the manifest threshold draws no box."
+covers = ["R1", "R2"]
+after = ["1.3"]
+hitl = true
+risk = "medium"
+
+[[entry]]
+id = 2
+type = "story"
+title = "Run the LiteRT stand-in on one still"
+description = "The debug build bundles a stand-in pack and runs it through LiteRT on one still image. Preprocess comes from the manifest. A frame with no object returns an empty list and the overlay invents no box. For R1 this is a real detector's boxes. For R2 this is the bundled stand-in. The release build does not contain the pack."
+verify = "The still shows the stand-in's labeled boxes, and a blank still shows no box."
+covers = ["R1", "R2"]
+after = [1]
+hitl = false
+risk = "high"
+
+[[entry]]
+id = 3
+type = "story"
+title = "Parity check catches a preprocess mismatch"
+description = "A fixed image set run in the app matches a reference run. The check fails on a letterbox, color-order, normalization, or rotation mismatch. For R2 this is the parity check. It uses the preprocess from the LiteRT story and stays out of the release build."
+verify = "The stand-in set passes, and a deliberate color-order swap fails the check."
+covers = ["R2"]
+after = [2]
+hitl = false
+risk = "high"
+
+[[entry]]
+id = 4
+type = "story"
+title = "Show boxes on the live camera"
+description = "CameraX keeps the latest upright frame, applies sensor rotation once, and disables stabilization that crops or warps. The overlay draws that frame's boxes. Before the buffer is released, the service encodes the full frame and a crop thumbnail and does not write an event. For R1 this is the live camera. This story adds exposure-cap and focus-distance names to the config snapshot and reads them. If camera permission is denied, the session does not start, the screen says \"Camera is required to scan the canopy.\", and the action opens system settings. The camera uses the preprocess the parity check already proved."
+verify = "Point the debug build at a scene and see the labeled boxes follow the preview. Deny camera permission and the session does not start."
+covers = ["R1"]
+after = [3]
+hitl = true
+risk = "high"
+
+[[entry]]
+id = 5
+type = "story"
+title = "Keep scanning with the preview hidden or the screen off"
+description = "Hiding the preview hides the overlay, leaves session status showing running, and leaves the session running. The tractor control cycles day, dim, and screen off. Screen off shows the service notification \"Screen off. Scanning continues.\", and that notification can stop the session. For R1 this is the hidden preview and the screen-off session. Replay uses this preview control and this notification."
+verify = "Hide the preview and session status still says running, with no boxes on screen. Turn the screen off and the notification says \"Screen off. Scanning continues.\""
+covers = ["R1"]
+after = [4]
+hitl = false
+risk = "medium"
+
+[[entry]]
+id = 6
+type = "story"
+title = "Replay a video and a GPX through the same service"
+description = "Video replay and GPX replay are port implementations on the debug build. GPX emits fixes and does not compute a canopy point. The debug HUD shows FPS, inference latency, and temperature. Open tracks wait until Events and place exists. A missing replay file does not start the session and the UI names the file. For R2 this is replay and the debug figures. Replay uses the frame encoder from the camera story and the preview control and notification from the screen-off story."
+verify = "A debug replay shows labeled boxes and the three HUD lines. A missing file is named and the session does not start."
+covers = ["R2"]
+after = [5]
+hitl = false
+risk = "medium"
+
+[[entry]]
+id = 7
+type = "story"
+title = "Leave replay and the model out of the release build"
+description = "The release APK contains no model file, no replay media, no debug HUD, and no parity hooks. For R2 this is the release exclusion. Scan still opens when a pack is supplied later."
+verify = "The release APK installs without a model file. Scan opens, and the debug HUD and replay controls are absent."
+covers = ["R2"]
+after = [3, 6]
+hitl = false
+risk = "low"
+
+[[entry]]
+id = 8
+type = "story"
+title = "Refactor sweep"
+description = "Cleanup only. Its scope is set at the start from plans and review notes this epic deferred. It adds no behavior."
+verify = "The scripted box, the still-image boxes, and the parity check still pass."
+covers = []
+after = [1, 2, 3, 4, 5, 6, 7]
+hitl = false
+risk = "low"
+
+[[entry]]
+id = 9
+type = "story"
+title = "A sideloaded debug build shows a labeled box"
+description = "The closing check for this epic. A debug build shows a labeled box from the stand-in path, and the JVM tests for the service, preprocess, and parity are green with no emulator. For R1 this is the installed overlay. For R2 this is the debug path that the release build does not contain."
+verify = "Install the debug APK and see a labeled box. The JVM suite is green, and the release APK still has no model or HUD."
+covers = ["R1", "R2"]
+after = [8]
+hitl = true
+risk = "medium"

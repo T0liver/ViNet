@@ -1,0 +1,111 @@
+# Events and place stories, in build order.
+
+[[entry]]
+id = 1
+type = "story"
+title = "One track writes one event"
+description = "A track that passes the minimum frames and score writes one event row, one full-frame photo, and one thumbnail from the encoded frame Live scan already hands over. Session status shows the event count go up by one. For R1 this is the create path. No second row is in this story. It needs the camera encoder and the replay service."
+verify = "Run a known replay and see the session count go from zero to one, with one photo and one thumbnail on disk."
+covers = ["R1"]
+after = ["2.4", "2.6"]
+hitl = true
+risk = "high"
+
+[[entry]]
+id = 2
+type = "story"
+title = "Join the frame to the canopy point"
+description = "The frame and the fix join on elapsed realtime, never on the latest fix. The stored point is the canopy point after the mount offset, with accuracy, speed, and bearing. For R1 this is the position. A JVM test uses a known GPX and frame time."
+verify = "The known replay stores the expected canopy latitude and longitude, not the raw phone fix."
+covers = ["R1"]
+after = [1]
+hitl = false
+risk = "high"
+
+[[entry]]
+id = 3
+type = "story"
+title = "Keep a track across detection gaps"
+description = "A frame with no detections does not end the track. The track ends only after its max age. The event is created only after the minimum frames and the class score. For R1 this is which tracks become events."
+verify = "A gap shorter than the max age stays one event. A longer gap does not create the event until the minimum frames return."
+covers = ["R1"]
+after = [2]
+hitl = false
+risk = "medium"
+
+[[entry]]
+id = 4
+type = "story"
+title = "Keep the best frame"
+description = "The service keeps the best full frame and thumbnail in memory and writes them only when the track ends. A better frame replaces the pair. Confidence has the largest weight. For R1 this is which photo is stored."
+verify = "A later higher-confidence frame replaces the photo, and no photo is written before the track ends."
+covers = ["R1"]
+after = [3]
+hitl = false
+risk = "medium"
+
+[[entry]]
+id = 5
+type = "story"
+title = "Merge a nearby repeat"
+description = "The same class within the configured distance and time stays the existing event and keeps its photo. For R1 this is the merge. No second row and no second image are written."
+verify = "A second nearby sighting of the same class leaves the event count and the photo unchanged."
+covers = ["R1"]
+after = [2, 4]
+hitl = false
+risk = "medium"
+
+[[entry]]
+id = 6
+type = "story"
+title = "Store an event with a weak or missing fix"
+description = "A fix outside the accuracy cap leaves the event with no canopy point, and the screen says \"location is missing\". A fix inside the cap that is worse than 5 m is labeled \"Weak GPS\". The event is not discarded. For R1 this is the weak and missing position. It uses the join from the canopy story."
+verify = "One replay stores no canopy point and says \"location is missing\". Another stores the point and says \"Weak GPS\"."
+covers = ["R1"]
+after = [5]
+hitl = false
+risk = "medium"
+
+[[entry]]
+id = 7
+type = "story"
+title = "Cap images and keep the rows"
+description = "The session cap and the global cap stop new image files and still write the event row. A confidence setting can skip the files. Cleanup deletes image files and keeps the rows. Session status shows the storage meter in the last tenth of either cap. For R1 this is the missing photo."
+verify = "Over the cap, the event count still rises and the new photo is absent. Cleanup removes the file and leaves the row."
+covers = ["R1"]
+after = [6]
+hitl = false
+risk = "medium"
+
+[[entry]]
+id = 8
+type = "story"
+title = "Tag the plot from stored polygons"
+description = "A point inside a polygon already stored on the device sets event.plotName. The session plot label is not copied onto the event. This story does not import the file. For R1 this is the plot name."
+verify = "A fixture polygon tags the event. The session label stays off the event. No polygon leaves the plot name empty."
+covers = ["R1"]
+after = [7]
+hitl = false
+risk = "low"
+
+[[entry]]
+id = 9
+type = "story"
+title = "Refactor sweep"
+description = "Cleanup only. Its scope is set at the start from plans and review notes this epic deferred. It adds no behavior."
+verify = "The one-event replay, the canopy point, and the merge check still pass."
+covers = []
+after = [1, 2, 3, 4, 5, 6, 7, 8]
+hitl = false
+risk = "low"
+
+[[entry]]
+id = 10
+type = "story"
+title = "A replay shows one sighting"
+description = "The closing check. One replay writes one event, one photo, and a canopy point, and the session count shows one. For R1 this is the whole stored sighting a person can see."
+verify = "Run the replay on a debug build and see one event, one photo, and the canopy point."
+covers = ["R1"]
+after = [9]
+hitl = true
+risk = "medium"

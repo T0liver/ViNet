@@ -53,3 +53,4 @@ Events and place owns tracks, merges, stored events, and the canopy join. Packs,
 ## Notes
 
 - Decision: 2026-11-09 Refined from the initiative lines, the architecture spine, and the experience spine. The navigation shell uses Jetpack Navigation Compose, chosen once in the app module. The field runtime stays with the later benchmark. LiteRT is only the spike's first implementation.
+- Decision: 2026-11-09 The tracer is "See one scripted box": Scan, the foreground service, and one labeled box from a scripted detector. LiteRT on a still image is next, because the real stand-in and its preprocess are the least certain part. Camera, screen-off, and replay fill the same service after that. The debug HUD shows FPS, inference latency, and temperature. Open tracks wait for Events and place. This epic's Scan screen is start, stop, status, the overlay, the preview control, and the tractor control. The start sheet's pack, mount, plot, and notes wait for later epics.

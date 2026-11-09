@@ -6,7 +6,7 @@ covers:
   - R2
   - R6
 after: []
-refined: false
+refined: true
 risk: medium
 ---
 
@@ -19,6 +19,16 @@ The release APK contains no model. A local import or a checksummed Wi-Fi downloa
 ## Outcome
 
 A release install cannot scan until the farmer imports a pack or downloads one, and the benchmark then picks a tier from still images already on the device.
+
+## Requirements
+
+- R1 (parent R2): Plot polygons are imported once in Settings and reused by later sessions. Met when a second session tags events from that file without asking again. This epic does not run point-in-polygon.
+- R2 (parent R6): A release APK contains no model file. The farmer imports a pack from local storage with no network, or downloads one from a configured index on Wi-Fi, and a download is installed only after the checksum matches. The app selects the largest installed tier that holds the configured frame rate, and the farmer can override that choice for the next session. If the smallest tier cannot, the app says so and still opens a scan. Met when a release install cannot scan until a pack is imported or downloaded, a bad checksum leaves the previous pack in place, and a local import is enough.
+
+## Constraints
+
+- C2 (SPEC §3.2, AD-9): Import and download add no Play services dependency.
+- C12 (AD-10): The benchmark loops still images that ship on the device. On API 29 and above, heat may slow inference or offer a lighter installed tier. Below API 29 it does not. The host is a configured URL. GitHub is allowed and is not required.
 
 ## Done when
 
@@ -39,3 +49,7 @@ Events and place tags events from polygons already stored. This epic does not ru
 - parent — _bmad-output/initiative-grape-leaf/initiative-grape-leaf.md, Requirements R2, R6
 - architecture — _bmad-output/initiative-grape-leaf/architecture-grape-leaf/architecture-grape-leaf.md, AD-9, AD-10, AD-11
 - experience — _bmad-output/initiative-grape-leaf/ux-grape-leaf/EXPERIENCE.md, Model tiers
+
+## Notes
+
+- Decision: 2026-11-09 The tracer is "Import a pack from local storage" on a release build with no bundled model. The checksummed download is next, because the index and the retry are the least certain part. The benchmark uses the looped stills already decided.

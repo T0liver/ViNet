@@ -1,0 +1,56 @@
+# Disease pressure stories, in build order.
+
+[[entry]]
+id = 1
+type = "story"
+title = "Count events per meter"
+description = "A JVM test counts unique events per meter traveled while speed stays at or above the minimum. A repeated event in the same segment does not raise the count. Below that speed, coverage does not grow. Density and severity stay separate numbers. For R1 this is the count. It needs canopy points and speed from Events and place."
+verify = "A moving fixture crosses the threshold. A parked fixture adds no coverage and does not."
+covers = ["R1"]
+after = ["3.2"]
+hitl = false
+risk = "medium"
+
+[[entry]]
+id = 2
+type = "story"
+title = "Show the pressure sentence"
+description = "A moving scan shows the sentence \"high disease pressure here\" on Scan and, with the screen off, as the service notification. The notification vibrates once. A stationary scan does not alert. For R1 this is the sentence. It uses the screen-off notification Live scan already shows, and it does not edit the review map."
+verify = "A moving replay shows that sentence and vibrates once. A parked replay does not alert."
+covers = ["R1"]
+after = [1, "2.5"]
+hitl = true
+risk = "high"
+
+[[entry]]
+id = 3
+type = "story"
+title = "Write the flagged segment row"
+description = "The count writes a segment row with density and severity as separate values. The review map, already able to draw a fixture flag, is not changed. For R1 this is the stored flag."
+verify = "The moving replay writes one flagged row, and the existing map draws it without a map change in this story."
+covers = ["R1"]
+after = [2, "4.7"]
+hitl = false
+risk = "medium"
+
+[[entry]]
+id = 4
+type = "story"
+title = "Refactor sweep"
+description = "Cleanup only. Its scope is set at the start from plans and review notes this epic deferred. It adds no behavior."
+verify = "The per-meter count and the pressure sentence still pass."
+covers = []
+after = [1, 2, 3]
+hitl = false
+risk = "low"
+
+[[entry]]
+id = 5
+type = "story"
+title = "A moving scan alerts and a parked scan does not"
+description = "The closing check on a debug build. For R1 this is the sentence and the stored flag together."
+verify = "Walk a replay that crosses the threshold and see the sentence. Repeat it parked and see no alert."
+covers = ["R1"]
+after = [4]
+hitl = true
+risk = "medium"

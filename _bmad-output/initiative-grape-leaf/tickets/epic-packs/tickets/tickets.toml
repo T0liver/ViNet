@@ -1,0 +1,89 @@
+# Packs, tiers, and heat stories, in build order.
+
+[[entry]]
+id = 1
+type = "story"
+title = "Import a pack from local storage"
+description = "The release APK contains no model file. Settings is not required yet. A local import copies a pack, verifies its checksum, and can be selected with no network. A bad checksum says \"This pack failed its checksum and was not installed.\" and leaves the previous pack in place. Scan does not open the camera until a pack exists. For R2 this is the local import. It needs a detector that can run a pack, and it lands after the pressure sentence so Scan is not edited at the same time."
+verify = "On a release build, import a local pack with no network and start a scan. A bad file is refused and the previous pack remains."
+covers = ["R2"]
+after = ["2.2", "5.2"]
+hitl = true
+risk = "medium"
+
+[[entry]]
+id = 2
+type = "story"
+title = "Download a pack and reject a bad checksum"
+description = "A user-started download reads a configured index URL and shows progress and retry. The pack installs only after the checksum matches. A failure leaves the previous pack in place. The download adds no Play services dependency. For R2 this is the download. The host is not chosen here. GitHub remains allowed."
+verify = "A good download becomes selectable. A bad checksum is refused and the previous pack remains."
+covers = ["R2"]
+after = [1]
+hitl = false
+risk = "high"
+
+[[entry]]
+id = 3
+type = "story"
+title = "Pick a tier from looped stills"
+description = "The benchmark loops still images that ship on the device and selects the largest installed tier that holds the frame rate. It does not download media. For R2 this is the tier choice."
+verify = "The benchmark names the tier that held the frame rate, using only on-device stills."
+covers = ["R2"]
+after = [2]
+hitl = false
+risk = "medium"
+
+[[entry]]
+id = 4
+type = "story"
+title = "Override the tier and admit a missed frame rate"
+description = "The farmer can override the tier for the next session. The running session keeps the snapshot it started with. If the smallest tier cannot hold the rate, the screen says \"This phone cannot hold the minimum frame rate on the smallest model.\" and Scan still opens. For R2 this is the override and the failure sentence."
+verify = "Change the tier and see it on the next session only. A failing smallest tier still opens Scan and keeps the sentence on status."
+covers = ["R2"]
+after = [3]
+hitl = false
+risk = "medium"
+
+[[entry]]
+id = 5
+type = "story"
+title = "Slow down when the phone heats up"
+description = "On API 29 and above, a rising thermal status slows inference or offers a lighter installed tier, and the notice says which one happened. Below API 29 there is no notice and no change. For R2 this is the heat behavior."
+verify = "On API 29 or above, the notice appears and the rate has already dropped, or the lighter tier applies after the farmer accepts it. Below API 29 the notice is absent."
+covers = ["R2"]
+after = [4]
+hitl = false
+risk = "medium"
+
+[[entry]]
+id = 6
+type = "story"
+title = "Add Settings for plots, tiles, and storage"
+description = "Adds the Settings destination. Plot polygons are imported once and reused. This story does not tag events. Offline tiles are imported from local storage and never downloaded. The storage meter is always visible here, and cleanup asks before deleting image files. The rows stay. For R1 this is the polygon import. The tagging story already stores a plot from a fixture."
+verify = "Import one polygon file and one tile file. A later session still lists that polygon. Cleanup removes a photo and leaves the event row."
+covers = ["R1"]
+after = [5, "3.8"]
+hitl = false
+risk = "medium"
+
+[[entry]]
+id = 7
+type = "story"
+title = "Refactor sweep"
+description = "Cleanup only. Its scope is set at the start from plans and review notes this epic deferred. It adds no behavior."
+verify = "A local import and the benchmark still complete."
+covers = []
+after = [1, 2, 3, 4, 5, 6]
+hitl = false
+risk = "low"
+
+[[entry]]
+id = 8
+type = "story"
+title = "A release build scans after a local import"
+description = "The closing check. A sideloaded release APK has no model and no Play services. A local import is enough to scan. For R2 this is the release path."
+verify = "Install the release APK, import a local pack with no network, and start a scan."
+covers = ["R2"]
+after = [7]
+hitl = true
+risk = "medium"

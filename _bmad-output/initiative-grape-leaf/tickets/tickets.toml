@@ -37,7 +37,7 @@ slug = "epic-density"
 title = "Disease pressure"
 description = "A moving scan writes flagged segment rows and shows the sentence high disease pressure here on the scan and on the service notification when the screen is off. That notification vibrates once. A stationary scan does not. This epic does not edit the review map."
 covers = ["R5"]
-after = [{ epic = 4, needs = "the review map drawing stored segment rows, so this epic only writes them and adds the scan alert" }]
+after = [{ epic = 2, needs = "the screen-off notification the pressure sentence reuses" }, { epic = 3, needs = "canopy points and speed on stored events" }, { epic = 4, needs = "the review map drawing stored segment rows, so this epic only writes them and adds the scan alert" }]
 
 [[epic]]
 id = 6

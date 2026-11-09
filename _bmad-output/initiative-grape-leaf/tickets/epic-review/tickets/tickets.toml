@@ -1,0 +1,100 @@
+# Review and export stories, in build order.
+
+[[entry]]
+id = 1
+type = "story"
+title = "Open one stored sighting"
+description = "Adds the Sessions destination. A session row opens a list. An event row shows the thumbnail, or the class swatch and \"No photo\" when the file is missing. An event with no canopy point still appears. For R1 this is the list. It needs one stored event."
+verify = "Open the session and see the event row, including one whose photo is missing."
+covers = ["R1"]
+after = ["3.1"]
+hitl = true
+risk = "medium"
+
+[[entry]]
+id = 2
+type = "story"
+title = "Show the sightings on an offline map"
+description = "MapLibre draws one marker per event at the stored canopy point, colored by the event class, with the class name as well as the color. With no tiles, the screen says \"No offline map tiles on this device.\" and the list still works. Pan and zoom stay on the device. For R1 this is the map. It needs canopy points."
+verify = "See the markers on stored tiles. Remove the tiles and see the named empty state, with the list still present."
+covers = ["R1"]
+after = [1, "3.2"]
+hitl = false
+risk = "high"
+
+[[entry]]
+id = 3
+type = "story"
+title = "Filter the list and the map together"
+description = "Class, plot, and feedback filter the list and the markers together. An empty result says no events match, and clearing the filter shows the session again. For R1 this is the filter."
+verify = "Choose a class and see only that class in the list and on the map. Clear it and see the session again."
+covers = ["R1"]
+after = [7]
+hitl = false
+risk = "low"
+
+[[entry]]
+id = 4
+type = "story"
+title = "Mark an event and navigate back"
+description = "Feedback stores correct, wrong, unsure, or none. Choosing the active value again returns it to none. The primary action opens a geo intent for the canopy point. Bearing and distance stay in the event detail. An event with no canopy point can still be marked and does not open navigation. For R1 this is feedback and navigate."
+verify = "Mark an event wrong, open it in another maps app, and see bearing and distance. Clear the mark and the stored value is none."
+covers = ["R1"]
+after = [3]
+hitl = false
+risk = "medium"
+
+[[entry]]
+id = 5
+type = "story"
+title = "Share GeoJSON, CSV, and KML/GPX"
+description = "The export sheet writes GeoJSON, CSV, and KML/GPX and opens the Android share sheet. The session stays on the phone. An empty session says the file has no events before the share sheet opens. For R2 this is those three formats. There is no account and no sync."
+verify = "Each format opens the share sheet, and the session is still in the list afterward."
+covers = ["R2"]
+after = [4]
+hitl = false
+risk = "medium"
+
+[[entry]]
+id = 6
+type = "story"
+title = "Share the zip and the retraining file"
+description = "The zip contains the event images. The retraining file contains events marked wrong or unsure, plus events under the configured confidence. Both open the share sheet. For R2 this is those two files. It uses the feedback values from the mark story."
+verify = "The zip contains the photo. The retraining file contains a wrong event and excludes a correct one."
+covers = ["R2"]
+after = [5]
+hitl = false
+risk = "medium"
+
+[[entry]]
+id = 7
+type = "story"
+title = "Draw a stored pressure flag"
+description = "The map draws a flagged segment from a stored row and labels density and severity separately. It does not compute them. In landscape the map and the list sit side by side. For R3 this is the drawing. A fixture row is enough. Disease pressure writes the real rows later."
+verify = "A fixture flagged row shows the two labels on the map. Landscape shows the map and the list side by side."
+covers = ["R3"]
+after = [2]
+hitl = false
+risk = "low"
+
+[[entry]]
+id = 8
+type = "story"
+title = "Refactor sweep"
+description = "Cleanup only. Its scope is set at the start from plans and review notes this epic deferred. It adds no behavior."
+verify = "The list, the map, and one export still open."
+covers = []
+after = [1, 2, 3, 4, 5, 6, 7]
+hitl = false
+risk = "low"
+
+[[entry]]
+id = 9
+type = "story"
+title = "Review a session with no network"
+description = "The closing check. With no network, a person filters a session, marks an event, and opens the share sheet. For R1 this is the offline review. For R2 this is the share."
+verify = "Turn the network off, filter the session, and share one file. The session remains on the phone."
+covers = ["R1", "R2"]
+after = [8]
+hitl = true
+risk = "medium"

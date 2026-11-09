@@ -1,0 +1,67 @@
+# Phone proof stories, in build order.
+
+[[entry]]
+id = 1
+type = "story"
+title = "Prove the release build on a high-end phone"
+description = "A person runs the release APK, after a local pack import, handheld and then mounted, on a high-end phone. The scan, one stored event, the review, one share, the pressure sentence, and a parked non-alert all match. For R1 through R6 this is the high-end demonstration. Config numbers may be written down. Behavior does not change."
+verify = "The high-end phone completes both postures, and each check above is seen."
+covers = ["R1", "R2", "R3", "R4", "R5", "R6"]
+after = ["6.8"]
+hitl = true
+risk = "medium"
+
+[[entry]]
+id = 2
+type = "story"
+title = "Prove the release build on an S10 with no Play services"
+description = "The same release run on an S10 that has no Play services, handheld and mounted. For R1 through R6 this is the no-Play-services demonstration. A crash or a missing class from a Play library fails the story."
+verify = "The S10 completes both postures with no Play services installed."
+covers = ["R1", "R2", "R3", "R4", "R5", "R6"]
+after = [1]
+hitl = true
+risk = "high"
+
+[[entry]]
+id = 3
+type = "story"
+title = "Prove the release build on a low-end phone"
+description = "The same release run on a low-end phone, handheld and mounted. For R1 through R6 this is the low-end demonstration. If the smallest tier cannot hold the frame rate, the failure sentence is visible and the scan still opens."
+verify = "The low-end phone completes both postures, or shows the frame-rate sentence and still scans."
+covers = ["R1", "R2", "R3", "R4", "R5", "R6"]
+after = [2]
+hitl = true
+risk = "high"
+
+[[entry]]
+id = 4
+type = "story"
+title = "Record the tuned numbers"
+description = "The numbers tried on the three phones are written into the config defaults. Behavior does not change. For R1 through R6 this is the tuning record, not a new path."
+verify = "The config names are unchanged, and the new defaults are the numbers from the three phones."
+covers = ["R1", "R2", "R3", "R4", "R5", "R6"]
+after = [3]
+hitl = true
+risk = "low"
+
+[[entry]]
+id = 5
+type = "story"
+title = "Refactor sweep"
+description = "Cleanup only, limited to the proof notes and any harness this epic added. It adds no product behavior."
+verify = "The three phone notes still name both postures, and no product rule changed."
+covers = []
+after = [1, 2, 3, 4]
+hitl = false
+risk = "low"
+
+[[entry]]
+id = 6
+type = "story"
+title = "The three-phone matrix is complete"
+description = "The closing check. For R1 through R6 this is the statement that every phone and both postures passed."
+verify = "The notes show the high-end phone, the S10 with no Play services, and the low-end phone, each handheld and mounted."
+covers = ["R1", "R2", "R3", "R4", "R5", "R6"]
+after = [5]
+hitl = true
+risk = "low"

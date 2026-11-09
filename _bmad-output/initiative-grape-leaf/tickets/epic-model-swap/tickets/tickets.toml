@@ -1,0 +1,61 @@
+# Real model swap stories, in build order. Every story waits on a trained pack.
+
+[[entry]]
+id = 1
+type = "story"
+title = "Import the trained pack"
+description = "The trained pack is imported into the proved release build and can be selected. It is not copied into the APK. For R1 this is the import. It needs the parity harness and the finished phone proof."
+verify = "Select the trained pack on the release build and see its id on the next session."
+covers = ["R1"]
+after = ["2.3", "7.6"]
+hitl = true
+risk = "medium"
+unknown = "The trainer project has not handed over a pack."
+
+[[entry]]
+id = 2
+type = "story"
+title = "Pass parity on the trained pack"
+description = "The existing parity check passes on the trained pack. A preprocess mismatch still fails it. For R1 this is parity. The pipeline does not change."
+verify = "The trained pack passes parity, and a color-order swap still fails."
+covers = ["R1"]
+after = [1]
+hitl = false
+risk = "high"
+unknown = "The trainer project has not handed over a pack."
+
+[[entry]]
+id = 3
+type = "story"
+title = "Accept the pack against ground truth"
+description = "A person runs the trained pack on a real row and compares the events with ground truth. For R1 this is the field acceptance. Threshold numbers may change in the pack. The app behavior does not."
+verify = "The field notes accept the pack, and the release APK still contains no model file."
+covers = ["R1"]
+after = [2]
+hitl = true
+risk = "high"
+unknown = "The trainer project has not handed over a pack."
+
+[[entry]]
+id = 4
+type = "story"
+title = "Refactor sweep"
+description = "Cleanup only, after the pack is in hand. It adds no pipeline behavior."
+verify = "Import, parity, and the field note still agree."
+covers = []
+after = [1, 2, 3]
+hitl = false
+risk = "low"
+unknown = "The trainer project has not handed over a pack."
+
+[[entry]]
+id = 5
+type = "story"
+title = "Scan a real row with the trained pack"
+description = "The closing check. For R1 this is the trained pack as the active pack on a real row."
+verify = "A sideloaded release build scans a real row with the trained pack and keeps the session on the phone."
+covers = ["R1"]
+after = [4]
+hitl = true
+risk = "medium"
+unknown = "The trainer project has not handed over a pack."
