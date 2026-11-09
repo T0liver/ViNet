@@ -1,2 +1,3 @@
 # ViNet
-ViNet is an application which can detect vine diseases or early non-normal sign on the vine just by pointing the camera at it.
+
+ViNet (`hu.toliver.vinet`) detects vine diseases or an early non-normal sign on the vine by pointing the camera at it. The product contract is `docs/SPEC.md`.
