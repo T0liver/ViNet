@@ -1,0 +1,33 @@
+{
+  "packId": "grape-yolo26n-fp16-jvm-test",
+  "modelVersion": "0.0.0-jvm-test",
+  "family": "yolo26",
+  "tier": "N",
+  "file": "model.tflite",
+  "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+  "backend": "litert",
+  "inputSize": [640, 640],
+  "inputFormat": {
+    "colorOrder": "RGB",
+    "normalize": "0-1",
+    "letterbox": true,
+    "padValue": 114
+  },
+  "outputFormat": "yolo26-end2end",
+  "classes": [
+    {
+      "id": 0,
+      "name": "JVM manifest class alpha",
+      "color": "#4B0082",
+      "minScore": 0.42
+    },
+    {
+      "id": 1,
+      "name": "JVM manifest class beta",
+      "color": "#FF6B35",
+      "minScore": 0.51
+    }
+  ],
+  "minTrackFrames": 3,
+  "notes": "Sample pack for story 1.3 JVM test"
+}
