@@ -1,0 +1,67 @@
+# Foundations stories, in build order.
+
+[[entry]]
+id = 1
+type = "story"
+title = "Sideload the ViNet launcher"
+description = "Stands up the version catalog, the module graph, and a debug app, hu.toliver.vinet, whose launcher shows the grape-leaf mark and the word ViNet in Fraunces, vine-colored, beside the mark. minSdk is 26 and targetSdk is 37. GitHub Actions runs one JVM test, and the closing suite story extends that workflow from one test to the full suite. For R3 this is that first test on CI, not replay. Later stories fill these modules."
+verify = "Install the debug APK and see the grape-leaf mark with the Fraunces word ViNet in vine beside it. The one JVM test is green on CI."
+covers = ["R3"]
+after = []
+hitl = true
+risk = "medium"
+
+[[entry]]
+id = 2
+type = "story"
+title = "Reject Android and Play services in the pure modules"
+description = "The build fails if core-model, tracking, density, or export import Android, if inference, camera, location, or data depend on each other, or if the app pulls in Play services. Hilt stays in Android modules. devtools may depend on the port modules, and those modules do not depend on devtools. devtools stays on the debug build only. The release APK contains no model file."
+verify = "The dependency check passes, and adding an Android import to core-model fails the build."
+covers = []
+after = [1]
+hitl = false
+risk = "medium"
+
+[[entry]]
+id = 3
+type = "story"
+title = "Parse a pack manifest into the shared contracts"
+description = "core-model defines the shared types and the config snapshot. The names include weakAccuracyM, from the initiative decision, plus the names in the architecture spine. The numbers are not tuned here. The manifest parser reads classes, colors, thresholds, and preprocessing from the pack file only, and class color is not a theme token. Detector, FrameSource, LocationSource, and InferenceBackend exist as signatures with no implementation. For R1 this is the types the schema story stores. For R3 this is the sample-manifest JVM test. The Room story consumes these types."
+verify = "A JVM test loads a sample manifest and the class name and color come from that file, not from code."
+covers = ["R1", "R3"]
+after = [2]
+hitl = false
+risk = "low"
+
+[[entry]]
+id = 4
+type = "story"
+title = "Room schema holds a sighting and a segment"
+description = "Session, event, and segment tables use the types from the manifest story. A session can store the config snapshot, packId, modelVersion, device info, start, end, notes, and the session plot label. An event can store the R1 sighting fields, including a missing canopy point. A segment can store density and severity as separate values. Ids are opaque strings. Instants are UTC epoch milliseconds. No scan writes a row. For R1 and R2 this is the schema only."
+verify = "A JVM test names every column in the exported schema, and no module inserts a session, event, or segment."
+covers = ["R1", "R2"]
+after = [3]
+hitl = false
+risk = "medium"
+
+[[entry]]
+id = 5
+type = "story"
+title = "Refactor sweep"
+description = "Cleanup only. Its scope is set at the start from plans and review notes this epic deferred. It adds no behavior."
+verify = "The launcher still installs, and the JVM tests and the schema check still pass."
+covers = []
+after = [1, 2, 3, 4]
+hitl = false
+risk = "low"
+
+[[entry]]
+id = 6
+type = "story"
+title = "CI runs the JVM suite"
+description = "A clean CI run executes every JVM test from the earlier stories and does not start an emulator. For R3 this is the test run the epic owes."
+verify = "A fresh GitHub Actions run is green, with JVM tests only."
+covers = ["R3"]
+after = [5]
+hitl = false
+risk = "low"

@@ -23,9 +23,9 @@ A developer can install a sideloaded build whose launcher shows the mark, and CI
 
 ## Requirements
 
-- R1 (parent R2): Each new sighting becomes one event with class, confidence, and at most one full-frame photo and one thumbnail. A fix inside `maxAccuracyM` is stored as the canopy point, with accuracy, speed, and bearing. A stored fix worse than `weakAccuracyM`, seeded at 5 m, is labeled "Weak GPS". When every fix is outside the cap, the event is still stored, with its photo and no canopy point, and the screen says "location is missing". The same class within the configured distance and time stays that event and keeps its photo. Met when a known replay writes one row and one image, a nearby repeat does not write a second row, and a replay with no fix inside the cap writes the row with no canopy point.
-- R2 (parent R5): While the farmer is moving, the app shows the sentence "high disease pressure here" when events per meter cross the configured threshold, and the review map flags that segment with density and severity as separate values. With the screen off, that sentence is the service notification, and the notification vibrates once. A scan that is not moving does not raise the alert. Met when a moving replay crosses the threshold and a stationary one does not.
-- R3 (parent R7): On a debug build, a developer can point the same scan path at a video and a GPX file, use a stand-in or scripted detector, and read the debug figures. A fixed image set run in the app matches a reference run closely enough to catch preprocess mismatches. The release build does not include the stand-in model, the replay media, the debug HUD, or the parity hooks. Met when a debug replay yields the same kind of overlay and events as a camera session and the stand-in parity check passes.
+- R1 (parent R2): Each new sighting becomes one event with class, confidence, and at most one full-frame photo and one thumbnail. A fix inside `maxAccuracyM` is stored as the canopy point, with accuracy, speed, and bearing. A stored fix worse than `weakAccuracyM`, seeded at 5 m, is labeled "Weak GPS". When every fix is outside the cap, the event is still stored, with its photo and no canopy point. The same class within the configured distance and time stays that event and keeps its photo. Met when the session and event schema can store that record, including a missing canopy point, and no scan writes a row.
+- R2 (parent R5): While the farmer is moving, the app shows the sentence "high disease pressure here" when events per meter cross the configured threshold, and the review map flags that segment with density and severity as separate values. Met when the segment schema can store density and severity as separate values. This epic does not raise the alert.
+- R3 (parent R7): On a debug build, a developer can point the same scan path at a video and a GPX file, use a stand-in or scripted detector, and read the debug figures. Met when CI runs the JVM tests for this epic. Replay, the debug HUD, and the parity hooks belong to Live scan.
 
 ## Constraints
 
@@ -33,9 +33,9 @@ A developer can install a sideloaded build whose launcher shows the mark, and CI
 - C3 (SPEC §3.4, architecture stack): minSdk is 26 and targetSdk is 37.
 - C5 (SPEC §3.6, AD-3, DESIGN): Classes, colors, score thresholds, and preprocessing come only from the model-pack manifest. Class color is not a theme token.
 - C7 (AD-2): core-model, tracking, density, and export import no Android APIs. Inference, camera, location, and data depend on core-model and not on each other.
-- C11 (AD-11): The app passes one immutable config snapshot into the other modules, and the session stores that snapshot. The key names are fixed, including `weakAccuracyM`. The numbers are tuned on phones.
-- C12 (AD-10): Inference goes through InferenceBackend, and only bundled runtimes are allowed. The benchmark loops still images that ship on the device and does not download media. A release APK contains no model file. A debug APK may bundle a stand-in model and a video for the first test. Thermal adaptation runs on API 29 and above and does nothing below.
-- C13 (AD-12): Data mints one opaque id per session and per event. Stored instants are UTC epoch milliseconds. Exports render those instants as ISO-8601 UTC.
+- C11 (AD-11): The app passes one immutable config snapshot into the other modules, and the session stores that snapshot. This epic fixes the key names, including `weakAccuracyM`. The numbers are tuned on phones later.
+- C12 (AD-10): `InferenceBackend` exists as a signature. A release APK contains no model file. `devtools` is on the debug build only. The benchmark, thermal adaptation, and a bundled debug video belong to later epics.
+- C13 (AD-12): Data mints one opaque id per session and each event. Stored instants are UTC epoch milliseconds. Export rendering is not this epic.
 - C14 (SPEC §1, §19, DESIGN): The app is ViNet, package `hu.toliver.vinet`. The mark is the grape-leaf drawing, chrome is vine and sky, and the wordmark is Fraunces.
 
 ## Done when
@@ -58,3 +58,4 @@ Live scan owns the capture pipeline and the navigation library. Events and place
 ## Notes
 
 - Decision: 2026-11-08 Refined from the initiative lines and the architecture spine. The CI vendor is left to the first story. The navigation library is left to Live scan.
+- Decision: 2026-11-09 The tracer is "Sideload the ViNet launcher": the module projects, the mark on the installed app, and one JVM test on CI. Contracts and Room wait, because those projects already exist empty for the next stories to fill. The dependency guard is next, because a Play services or Android leak is the least certain part. GitHub Actions is the CI vendor. `weakAccuracyM` is a snapshot key here even though the architecture spine's key list omits it.
