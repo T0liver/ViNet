@@ -56,6 +56,25 @@ private val MODEL_FILE_EXTENSIONS = setOf(
     ".mlmodelc",
 )
 
+private val REPLAY_MEDIA_EXTENSIONS = setOf(
+    ".mp4",
+    ".mov",
+    ".mkv",
+    ".webm",
+    ".gpx",
+    ".3gp",
+)
+
+private val RELEASE_FORBIDDEN_MARKERS = listOf(
+    "hu/toliver/vinet/inference/parity/StandInParityCheck",
+    "hu/toliver/vinet/devtools/ParityHarnessHook",
+    "hu/toliver/vinet/devtools/DebugHudFormatter",
+    "hu/toliver/vinet/devtools/DebugHudSampler",
+    "hu/toliver/vinet/scan/DebugReplaySessionPorts",
+    "Developer tools on",
+    "Use video + GPX replay",
+)
+
 class ViNetDependencyGuardPlugin : Plugin<Project> {
     override fun apply(root: Project) {
         require(root.path == ":") {
@@ -86,7 +105,7 @@ class ViNetDependencyGuardPlugin : Plugin<Project> {
 
         root.tasks.register<CheckReleaseApkModelFilesTask>("checkReleaseApkHasNoModelFile") {
             group = "verification"
-            description = "Release APK must not bundle model files"
+            description = "Release APK must not bundle a model, replay media, the debug HUD, or parity hooks"
             dependsOn(":app:assembleRelease")
             apkFile.set(root.layout.projectDirectory.file("app/build/outputs/apk/release/app-release-unsigned.apk"))
             reportFile.set(root.layout.buildDirectory.file("reports/dependency-guard/release-apk-model-files.txt"))
@@ -303,39 +322,52 @@ abstract class CheckReleaseApkModelFilesTask : DefaultTask() {
         if (!apk.isFile) {
             throw GradleException("Release APK not found at ${apk.absolutePath}; run :app:assembleRelease first")
         }
-        val modelEntries = mutableListOf<String>()
+        val violations = mutableListOf<String>()
         ZipFile(apk).use { zip ->
             zip.entries().asSequence().forEach { entry ->
                 if (entry.isDirectory) return@forEach
                 val name = entry.name
                 val lower = name.lowercase()
-                if (!lower.startsWith("assets/") && !lower.startsWith("res/raw/")) {
-                    return@forEach
+                if (lower.startsWith("assets/") || lower.startsWith("res/raw/")) {
+                    val extension = lower.substringAfterLast('.', "")
+                    val dotted = if (extension.isNotEmpty()) ".$extension" else ""
+                    val modelFile = MODEL_FILE_EXTENSIONS.contains(dotted)
+                    val replayMedia = REPLAY_MEDIA_EXTENSIONS.contains(dotted)
+                    val standInPack = lower.contains("stand-in/")
+                    val modelPath = lower.contains("/models/") || lower.endsWith("/model.pack")
+                    if (modelFile || standInPack || modelPath) {
+                        violations += "MODEL: $name"
+                    }
+                    if (replayMedia) {
+                        violations += "REPLAY: $name"
+                    }
                 }
-                val extension = lower.substringAfterLast('.', "")
-                val modelFile = extension.isNotEmpty() && MODEL_FILE_EXTENSIONS.contains(".$extension")
-                val standInPack = lower.contains("stand-in/")
-                val modelPath = lower.contains("/models/") || lower.endsWith("/model.pack")
-                if (modelFile || standInPack || modelPath) {
-                    modelEntries += name
+                if (lower.endsWith(".dex") || lower.endsWith(".xml") || lower.startsWith("assets/")) {
+                    val bytes = zip.getInputStream(entry).use { it.readBytes() }
+                    val text = String(bytes, Charsets.ISO_8859_1)
+                    RELEASE_FORBIDDEN_MARKERS.forEach { marker ->
+                        if (text.contains(marker)) {
+                            violations += "DEBUG: $marker in $name"
+                        }
+                    }
                 }
             }
         }
         reportFile.get().asFile.apply {
             parentFile.mkdirs()
             writeText(
-                if (modelEntries.isEmpty()) {
-                    "OK: no model files in ${apk.name}"
+                if (violations.isEmpty()) {
+                    "OK: no model, replay media, debug HUD, or parity hooks in ${apk.name}"
                 } else {
-                    modelEntries.joinToString("\n") { "MODEL: $it" }
+                    violations.joinToString("\n")
                 },
             )
         }
-        if (modelEntries.isNotEmpty()) {
+        if (violations.isNotEmpty()) {
             throw GradleException(
                 buildString {
-                    appendLine("Release APK must not contain model files or the stand-in pack (C12 / AD-10). Found:")
-                    modelEntries.forEach { appendLine("  - $it") }
+                    appendLine("Release APK must omit the model, replay media, debug HUD, and parity hooks (C12 / AD-10). Found:")
+                    violations.forEach { appendLine("  - $it") }
                 },
             )
         }

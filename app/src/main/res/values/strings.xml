@@ -4,4 +4,6 @@
     <string name="scan_notification_channel">Scan capture</string>
     <string name="scan_notification_title">ViNet scan</string>
     <string name="scan_notification_running">Scan is running</string>
+    <string name="scan_notification_screen_off">Screen off. Scanning continues.</string>
+    <string name="scan_notification_stop">Stop</string>
 </resources>

@@ -62,6 +62,8 @@ dependencies {
     implementation(libs.androidx.navigation.compose)
     implementation(libs.androidx.hilt.navigation.compose)
     implementation(libs.kotlinx.coroutines.android)
+    implementation(libs.androidx.camera.core)
+    implementation(libs.androidx.camera.view)
 
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.compose.ui)
@@ -77,4 +79,6 @@ dependencies {
     debugImplementation(libs.androidx.compose.ui.tooling)
 
     testImplementation(libs.junit)
+    testImplementation(project(":devtools"))
+    testImplementation(libs.kotlinx.coroutines.core)
 }

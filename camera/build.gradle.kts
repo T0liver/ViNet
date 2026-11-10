@@ -15,6 +15,10 @@ android {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
     }
+
+    testOptions {
+        unitTests.isReturnDefaultValues = true
+    }
 }
 
 kotlin {
@@ -24,4 +28,9 @@ kotlin {
 dependencies {
     implementation(project(":core-model"))
     implementation(libs.kotlin.stdlib)
+    implementation(libs.kotlinx.coroutines.core)
+    implementation(libs.androidx.camera.core)
+    implementation(libs.androidx.camera.camera2)
+    implementation(libs.androidx.camera.lifecycle)
+    testImplementation(libs.junit)
 }

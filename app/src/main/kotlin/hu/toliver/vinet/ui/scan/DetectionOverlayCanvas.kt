@@ -21,18 +21,23 @@ import hu.toliver.vinet.ui.ViNetColors
 fun DetectionOverlayCanvas(
     overlayBoxes: List<OverlayBox>,
     modifier: Modifier = Modifier,
+    frameWidth: Int = 0,
+    frameHeight: Int = 0,
 ) {
     val textMeasurer = rememberTextMeasurer()
     val labelStyle = TextStyle(color = ViNetColors.OnVine, fontSize = 14.sp)
     val strokePx = with(LocalDensity.current) { 2.dp.toPx() }
 
     Canvas(modifier = modifier.fillMaxSize()) {
-        val w = size.width
-        val h = size.height
+        val content = fittedContentRect(size.width, size.height, frameWidth, frameHeight)
+        val w = content.width
+        val h = content.height
+        val originX = content.left
+        val originY = content.top
         overlayBoxes.forEach { box ->
             val color = parseManifestColor(box.colorHex)
-            val left = box.detection.box.left * w
-            val top = box.detection.box.top * h
+            val left = originX + box.detection.box.left * w
+            val top = originY + box.detection.box.top * h
             val boxW = (box.detection.box.right - box.detection.box.left) * w
             val boxH = (box.detection.box.bottom - box.detection.box.top) * h
             drawRect(
@@ -56,6 +61,24 @@ fun DetectionOverlayCanvas(
             )
         }
     }
+}
+
+internal data class ContentRect(val left: Float, val top: Float, val width: Float, val height: Float)
+
+/** Same fit as the preview (`FIT_CENTER`): the full upright frame, with bars if the aspects differ. */
+internal fun fittedContentRect(viewWidth: Float, viewHeight: Float, frameWidth: Int, frameHeight: Int): ContentRect {
+    if (viewWidth <= 0f || viewHeight <= 0f || frameWidth <= 0 || frameHeight <= 0) {
+        return ContentRect(0f, 0f, viewWidth, viewHeight)
+    }
+    val scale = minOf(viewWidth / frameWidth, viewHeight / frameHeight)
+    val width = frameWidth * scale
+    val height = frameHeight * scale
+    return ContentRect(
+        left = (viewWidth - width) / 2f,
+        top = (viewHeight - height) / 2f,
+        width = width,
+        height = height,
+    )
 }
 
 fun parseManifestColor(hex: String): Color {
