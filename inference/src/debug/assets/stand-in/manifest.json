@@ -1,0 +1,27 @@
+{
+  "packId": "grape-litert-standin",
+  "modelVersion": "0.0.0-standin",
+  "family": "standin",
+  "tier": "N",
+  "file": "standin.tflite",
+  "sha256": "634acb4d1171db04674108daa2e64e179643edb6fef6441fd55b15a7e7bb5eb8",
+  "backend": "litert",
+  "inputSize": [8, 8],
+  "inputFormat": {
+    "colorOrder": "RGB",
+    "normalize": "0-1",
+    "letterbox": true,
+    "padValue": 114
+  },
+  "outputFormat": "standin-score-box",
+  "classes": [
+    {
+      "id": 0,
+      "name": "Downy mildew",
+      "color": "#2E7D32",
+      "minScore": 0.55
+    }
+  ],
+  "minTrackFrames": 3,
+  "notes": "Debug-only LiteRT stand-in. The release build does not ship this pack."
+}

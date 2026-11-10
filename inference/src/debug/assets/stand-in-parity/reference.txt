@@ -1,0 +1,21 @@
+# Reference run for the debug stand-in set.
+# inputSha256 is SHA-256 of the little-endian float32 tensor from ManifestPreprocess.
+# Detection rows are classId score left top right bottom.
+
+solid-white 5ce183e97a10e7aeeeecc15c49c055053961896c1d5d514d6e4c59dfd0544310
+d 0 1.0 0.15 0.2 0.45 0.55
+d 0 1.0 0.5 0.3 0.85 0.75
+
+solid-black ef115a0e0c15cdc41958ca46b5b14b456115f4baec5e3ca68599d2a8f435e3b8
+
+wide-bright 7bbac4f5f12627bd4feb5bb54b6b70197c248a2758ccb0fccffe0df7c52cb69a
+d 0 0.5852942 0.15 0.2 0.45 0.55
+d 0 0.5852942 0.5 0.3 0.85 0.75
+
+red-square fc8eff2de13b06528897a33d0555a323db9aa5c57b45721c13e3970d5f650757
+
+yellow-wide 7653bc880de1c0aa124d8b20c93b8746a04d3aff63cc75d9a1eeccd90f75dc1b
+d 0 0.5294118 0.15 0.2 0.45 0.55
+d 0 0.5294118 0.5 0.3 0.85 0.75
+
+gradient e3f0e494e80b2ccdcc6be64f0adfaf821033156c6f6d27517498199c9801f839

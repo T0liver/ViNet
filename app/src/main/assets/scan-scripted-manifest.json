@@ -1,0 +1,27 @@
+{
+  "packId": "grape-scripted-scan-debug",
+  "modelVersion": "0.0.0-scripted",
+  "family": "scripted",
+  "tier": "N",
+  "file": "none.tflite",
+  "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+  "backend": "scripted",
+  "inputSize": [640, 640],
+  "inputFormat": {
+    "colorOrder": "RGB",
+    "normalize": "0-1",
+    "letterbox": true,
+    "padValue": 114
+  },
+  "outputFormat": "scripted",
+  "classes": [
+    {
+      "id": 0,
+      "name": "Scripted grape leaf",
+      "color": "#4B0082",
+      "minScore": 0.42
+    }
+  ],
+  "minTrackFrames": 3,
+  "notes": "Story 2.1 scripted scan pack"
+}

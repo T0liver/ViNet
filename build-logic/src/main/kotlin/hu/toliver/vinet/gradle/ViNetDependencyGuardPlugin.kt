@@ -313,10 +313,10 @@ abstract class CheckReleaseApkModelFilesTask : DefaultTask() {
                     return@forEach
                 }
                 val extension = lower.substringAfterLast('.', "")
-                if (extension.isNotEmpty() && MODEL_FILE_EXTENSIONS.contains(".$extension")) {
-                    modelEntries += name
-                }
-                if (lower.contains("/models/") || lower.endsWith("/model.pack")) {
+                val modelFile = extension.isNotEmpty() && MODEL_FILE_EXTENSIONS.contains(".$extension")
+                val standInPack = lower.contains("stand-in/")
+                val modelPath = lower.contains("/models/") || lower.endsWith("/model.pack")
+                if (modelFile || standInPack || modelPath) {
                     modelEntries += name
                 }
             }
@@ -334,7 +334,7 @@ abstract class CheckReleaseApkModelFilesTask : DefaultTask() {
         if (modelEntries.isNotEmpty()) {
             throw GradleException(
                 buildString {
-                    appendLine("Release APK must not contain model files (C12 / AD-10). Found:")
+                    appendLine("Release APK must not contain model files or the stand-in pack (C12 / AD-10). Found:")
                     modelEntries.forEach { appendLine("  - $it") }
                 },
             )

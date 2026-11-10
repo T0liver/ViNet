@@ -27,4 +27,6 @@ dependencies {
     implementation(project(":camera"))
     implementation(project(":location"))
     implementation(libs.kotlin.stdlib)
+    implementation(libs.kotlinx.coroutines.core)
+    implementation(libs.kotlinx.coroutines.android)
 }

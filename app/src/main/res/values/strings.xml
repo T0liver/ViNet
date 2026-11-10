@@ -1,4 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">ViNet</string>
+    <string name="scan_notification_channel">Scan capture</string>
+    <string name="scan_notification_title">ViNet scan</string>
+    <string name="scan_notification_running">Scan is running</string>
 </resources>

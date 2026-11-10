@@ -24,4 +24,9 @@ kotlin {
 dependencies {
     implementation(project(":core-model"))
     implementation(libs.kotlin.stdlib)
+    implementation(libs.litert)
+    testImplementation(libs.junit)
+    testImplementation(libs.bytedeco.javacpp)
+    testImplementation(libs.bytedeco.tensorflow.lite)
+    testImplementation("org.bytedeco:tensorflow-lite:${libs.versions.tfliteBytedeco.get()}:linux-x86_64")
 }

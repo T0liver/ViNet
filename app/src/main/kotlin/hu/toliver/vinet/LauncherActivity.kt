@@ -5,7 +5,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import dagger.hilt.android.AndroidEntryPoint
-import hu.toliver.vinet.ui.LauncherScreen
+import hu.toliver.vinet.ui.ViNetNavHost
 import hu.toliver.vinet.ui.ViNetTheme
 
 @AndroidEntryPoint
@@ -15,7 +15,7 @@ class LauncherActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             ViNetTheme {
-                LauncherScreen()
+                ViNetNavHost()
             }
         }
     }
